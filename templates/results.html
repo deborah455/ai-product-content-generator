@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generated Results - AI Content Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #9333ea, #3b82f6, #f43f5e);
+      background-size: 400% 400%;
+      animation: bgshift 10s ease infinite;
+      color: white;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    @keyframes bgshift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      text-shadow: 3px 3px 8px rgba(0,0,0,0.3);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      margin: 15px;
+      max-width: 600px;
+      width: 100%;
+      animation: fadeIn 0.6s ease;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: #fde68a;
+    }
+
+    p {
+      color: #fff;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    a.back {
+      display: inline-block;
+      background-color: #fbbf24;
+      color: #111;
+      text-decoration: none;
+      padding: 12px 30px;
+      border-radius: 10px;
+      margin-top: 30px;
+      transition: 0.3s;
+      font-weight: 600;
+    }
+
+    a.back:hover {
+      background-color: #facc15;
+      transform: scale(1.08);
+    }
+
+    footer {
+      margin-top: 30px;
+      color: #ffe4e6;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Generated Product Descriptions</h1>
+  
+  {% for r in results %}
+  <div class="card">
+    <h3>{{ r.product }}</h3>
+    <p>{{ r.description }}</p>
+  </div>
+  {% endfor %}
+  
+  <a href="/" class="back">⬅ Back</a>
+
+  <footer>Made with ❤️ by <strong>Deborah Nehem</strong></footer>
+</body>
+</html>

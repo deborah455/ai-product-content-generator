@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Content Generator | Deborah Nehem</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a2d0a1d4f2.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+        @keyframes gradientBG {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        .icon {
+            font-size: 2rem;
+            color: #ffcc70;
+        }
+        button {
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen text-center px-6">
+
+    <div class="glass max-w-3xl w-full">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-3">
+            <i class="fas fa-robot mr-3"></i> AI Content Generator
+        </h1>
+        <p class="text-lg mb-6 text-gray-200">
+            Upload your CSV file and watch artificial intelligence craft stunning product descriptions in seconds.  
+            Designed for creators, brands, and innovators — powered by smart AI automation.
+        </p>
+
+        <form id="uploadForm" enctype="multipart/form-data" method="post" action="/generate" class="mb-8">
+            <input type="file" name="file" accept=".csv" class="mb-4 text-black px-3 py-2 rounded-lg w-full bg-white">
+            <button type="submit" class="bg-yellow-400 text-gray-900 font-semibold px-6 py-2 rounded-full hover:bg-yellow-500">
+                <i class="fas fa-bolt mr-2"></i> Generate Descriptions
+            </button>
+        </form>
+
+        <div id="results" class="hidden mt-6 p-4 rounded-lg bg-white bg-opacity-20 text-left">
+            <h2 class="text-2xl mb-3 font-semibold"><i class="fas fa-file-alt mr-2"></i> Generated Descriptions</h2>
+            <pre id="output" class="whitespace-pre-wrap text-gray-200"></pre>
+            <button id="downloadBtn" class="mt-4 bg-green-400 text-gray-900 font-semibold px-5 py-2 rounded-full hover:bg-green-500">
+                <i class="fas fa-download mr-2"></i> Download Results
+            </button>
+        </div>
+
+        <div class="mt-10 border-t border-gray-300 pt-6">
+            <h3 class="text-2xl mb-2 font-semibold"><i class="fas fa-star text-yellow-400"></i> Why Choose This Tool?</h3>
+            <ul class="text-left list-disc list-inside text-gray-100 space-y-2">
+                <li><i class="fas fa-magic mr-2 text-yellow-300"></i> Generates creative AI-powered content instantly</li>
+                <li><i class="fas fa-file-csv mr-2 text-green-300"></i> Simple CSV upload system for bulk generation</li>
+                <li><i class="fas fa-download mr-2 text-pink-300"></i> Download ready-to-use marketing content</li>
+                <li><i class="fas fa-lightbulb mr-2 text-blue-300"></i> Perfect for eCommerce, branding, and startups</li>
+            </ul>
+        </div>
+
+        <footer class="mt-10 text-sm text-gray-200">
+            <p>🚀 Built by <span class="font-semibold text-yellow-300">Deborah Nehem</span> — innovating with purpose 💫</p>
+            <p class="mt-2">© 2025 AI Agent Project | Made with ❤️ and creativity by Deborah Nehem</p>
+        </footer>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const results = document.getElementById('results');
+        const output = document.getElementById('output');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // prevent page reload
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating...';
+
+            try {
+                const formData = new FormData(form);
+                const res = await fetch('/generate', { method: 'POST', body: formData });
+
+                if (!res.ok) {
+                    throw new Error(`Server error: ${res.status}`);
+                }
+
+                // Try to parse JSON first; fallback to text if fails
+                let text;
+                try {
+                    const data = await res.json();
+                    text = JSON.stringify(data, null, 2);
+                } catch {
+                    text = await res.text();
+                }
+
+                output.textContent = text;
+                results.classList.remove('hidden');
+
+            } catch (err) {
+                console.error(err);
+                alert('Failed to generate descriptions. Check console for details.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Generate Descriptions';
+            }
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            const blob = new Blob([output.textContent], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'generated_descriptions.txt';
+            link.click();
+        });
+    </script>
+</body>
+</html>
